@@ -23,4 +23,4 @@ spec:
             tier: frontend
     ports:
       - protocol: TCP
-        port: 6379   
+        port: c-redis-port   

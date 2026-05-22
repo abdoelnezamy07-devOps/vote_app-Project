@@ -15,22 +15,19 @@ spec:
   - from:
       - namespaceSelector:
           matchLabels:
-            # لازم تتأكد إن الـ namespace بتاع الـ ingress controller عليه الليبل ده
             kubernetes.io/metadata.name: ingress-nginx 
     ports:
     - protocol: TCP
-      port: vote-port # بورت الكونتينر بتاع الـ Vote
-# ... الـ Egress يفضل زي ما هو (للـ Redis والـ DNS)
+      port: vote-port
   egress:
   - to:
       - podSelector:
           matchLabels:
-            app: redis # مسموح له يكلم الريديس بس
+            app: redis 
             tier: backend
     ports:
     - protocol: TCP
       port: c-redis-port
-  # لازم تسمح بـ DNS عشان الـ Pod يعرف يترجم اسم "redis-svc" لـ IP
   - to:
       - namespaceSelector: {}
     ports:

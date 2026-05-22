@@ -15,6 +15,7 @@ spec:
       - podSelector: 
           matchLabels: 
             app: redis
+            tier: backend
     ports: 
     - protocol: TCP 
       port: c-redis-port
@@ -22,6 +23,7 @@ spec:
       - podSelector: 
           matchLabels: 
             app: postgres
+            tier: backend
     ports: 
     - protocol: TCP
       port: c-db-port

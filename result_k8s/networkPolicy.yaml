@@ -15,11 +15,10 @@ spec:
   - from:
       - namespaceSelector:
           matchLabels:
-            # لازم تتأكد إن الـ namespace بتاع الـ ingress controller عليه الليبل ده
             kubernetes.io/metadata.name: ingress-nginx 
     ports:
     - protocol: TCP
-      port: result-port # بورت الكونتينر بتاع الـ result
+      port: result-port 
   egress:
   - to:
       - podSelector:
@@ -29,7 +28,6 @@ spec:
     ports:
     - protocol: TCP
       port: c-db-port
-  # لازم تسمح بـ DNS عشان الـ Pod يعرف يترجم اسم "redis-svc" لـ IP
   - to:
       - namespaceSelector: {}
     ports:

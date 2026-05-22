@@ -14,5 +14,5 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      name: vote-svcport
+      name: vote-svc-port
       targetPort: vote-port

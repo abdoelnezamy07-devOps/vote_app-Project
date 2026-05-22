@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-cm
+  namespace: security
+data:
+  REDIS_HOST: redis.
+  POSTGRES_HOST: db.
+  DB_NAME: postgres
+
