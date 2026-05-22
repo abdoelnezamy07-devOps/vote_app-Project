@@ -1,5 +1,3 @@
-# Voting Application - DevOps Challenge
-
 ## Project Overview
 
 This is a distributed voting application that allows users to vote between two options and view real-time results. The application consists of multiple microservices that work together to provide a complete voting experience.
@@ -40,11 +38,6 @@ The application should use a **two-tier network architecture** for security and 
   - Internal communication only
 
 This separation ensures that database and message queue services are not directly accessible from outside, while the web services remain accessible to users.
-
-## Your Task
-
-As a DevOps engineer, your task is to containerize this application and create the necessary infrastructure files. You need to create:
-
 ### 1. Docker Files
 Create `Dockerfile` for each service:
 - `vote/Dockerfile` - for the Python Flask application
@@ -70,7 +63,6 @@ The application includes health check scripts:
 Use these scripts in your Docker Compose configuration to ensure services are ready before dependent services start.
 
 ## Requirements
-
 - All services should be properly networked using **two-tier architecture**:
   - **Frontend tier network**: Connect Vote and Result services
   - **Backend tier network**: Connect Worker, Redis, and PostgreSQL
@@ -99,25 +91,4 @@ The application includes a seed service (`/seed-data`) that can populate the dat
    ```bash
    docker compose run --rm seed
    ```
-3. Or run it as a one-time service with a profile:
-   ```bash
-   docker compose --profile seed up
-   ```
-
-## Getting Started
-
-1. Examine the source code in each service directory
-2. Create the necessary Dockerfiles
-3. Create the docker-compose.yml file with two-tier networking
-4. Test your implementation by running `docker compose up`
-5. Populate test data using the seed service
-6. Verify that you can vote and see results in real-time
-
-## Notes
-
-- The voting application only accepts one vote per client browser
-- The result service uses WebSocket for real-time updates
-- The worker service continuously processes votes from the Redis queue
-- Make sure to handle service startup order properly with health checks
-
-Good luck with your challenge! 🚀
+####### Continue, i'm gonna write how you can use it in details with terraform as well #######
