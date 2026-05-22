@@ -1,0 +1,14 @@
+
+posta
+postb
+__pycache__/
+*.pyc
+
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+
+.vscode/
+.idea/
+.DS_Store

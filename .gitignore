@@ -1,0 +1,53 @@
+# Prerequisites 
+node_modules/
+/dist/
+/.angular/
+/.next/
+bin/
+obj/
+*.suo
+*.user
+*.sln.docstates
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+/opt/venv/
+
+# Environment Secrets 
+.env
+.env.local
+.env.*.local
+*.secret
+*.pem
+*.key
+
+# Operating System Files 
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors 
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+*.tfvars
+*.tfvars.json
+
+# Kubernetes 
+.kube/
+kubeconfig

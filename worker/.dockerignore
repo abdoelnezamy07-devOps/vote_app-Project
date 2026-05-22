@@ -1,0 +1,16 @@
+bin/
+obj/
+
+*.suo
+*.user
+*.sln.docstates
+.vs/
+
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+
+.vscode/
+.idea/
+.DS_Store

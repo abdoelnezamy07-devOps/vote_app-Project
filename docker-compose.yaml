@@ -1,0 +1,65 @@
+services:
+# FrontEnd Service
+  vote:
+    build: ./vote
+    ports:
+      - "8080:8080"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      redis:
+        condition: service_healthy
+  result:
+    build: ./result
+    ports:
+      - "8081:4000"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy 
+# BackEnd Tier
+  worker:
+    build: ./worker
+    networks:
+      - backend
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+  redis:
+    image: redis:alpine
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "sh", "./healthchecks/redis.sh"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  db:
+    image: postgres:15-alpine
+    environment:
+     - POSTGRES_USER=${POSTGRES_USER}
+     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "sh", "./healthchecks/postgres.sh"]
+      interval: 5s
+      timeout: 3s
+      retries: 5     
+  
+  seed-data:
+    build: ./seed-data
+    networks:
+      - frontend
+    depends_on:
+      vote:
+        condition: service_started
+
+networks:
+  frontend:
+  backend:
