@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote
+  namespace: security 
+  labels:
+    app: vote
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vote
+      tier: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: vote
+        tier: frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: vote-cont
+          image: abdelrhmanpasha/vote:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - name: vote-port
+              containerPort: 80
+          env:
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_HOST
+                  name: app-cm
+            
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          
+          readinessProbe:
+            httpGet:
+              path: / # مسار خفيف للتأكد إن الـ App قام
+              port: vote-port
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          
+          livenessProbe:
+            httpGet:
+              path: /
+              port: vote-port
+            initialDelaySeconds: 20
+            periodSeconds: 10

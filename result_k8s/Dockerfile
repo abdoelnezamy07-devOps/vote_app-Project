@@ -1,0 +1,16 @@
+FROM node:20-slim AS builder
+WORKDIR /app
+COPY package*.json .
+RUN npm install
+COPY . . 
+#RUN npm run build
+
+FROM node:20-slim
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json .
+RUN npm install --omit=dev
+COPY --chown=node:node --from=builder /app .
+USER node
+EXPOSE 8081
+CMD ["node", "server.js"]

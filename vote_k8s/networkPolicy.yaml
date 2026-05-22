@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vote-networkpolicy
+  namespace: security
+spec:
+  podSelector:
+    matchLabels:
+      app: vote
+      tier: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+      - namespaceSelector:
+          matchLabels:
+            # لازم تتأكد إن الـ namespace بتاع الـ ingress controller عليه الليبل ده
+            kubernetes.io/metadata.name: ingress-nginx 
+    ports:
+    - protocol: TCP
+      port: vote-port # بورت الكونتينر بتاع الـ Vote
+# ... الـ Egress يفضل زي ما هو (للـ Redis والـ DNS)
+  egress:
+  - to:
+      - podSelector:
+          matchLabels:
+            app: redis # مسموح له يكلم الريديس بس
+            tier: backend
+    ports:
+    - protocol: TCP
+      port: c-redis-port
+  # لازم تسمح بـ DNS عشان الـ Pod يعرف يترجم اسم "redis-svc" لـ IP
+  - to:
+      - namespaceSelector: {}
+    ports:
+     - protocol: UDP
+       port: 53
+     - protocol: TCP
+       port: 53 

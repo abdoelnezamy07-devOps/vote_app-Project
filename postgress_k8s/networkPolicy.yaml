@@ -1,0 +1,26 @@
+--- 
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-db-networkpolicy
+  namespace: security
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+      tier: backend
+  policyTypes:
+    - Ingress
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: worker
+            tier: backend
+      - podSelector:
+          matchLabels:
+            app: result
+            tier: frontend
+    ports:
+      - protocol: TCP
+        port: 5432
