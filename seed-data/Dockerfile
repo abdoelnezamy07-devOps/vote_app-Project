@@ -8,15 +8,10 @@ RUN python make-data.py
 FROM alpine:latest
 WORKDIR /app
 
-# تثبيت أداة apache2-utils اللي فيها أمر 'ab'
 RUN apk add --no-cache apache2-utils
 RUN addgroup -S loadgroup && adduser -S loaduser -G loadgroup
-# نسخ الملفات المولدة والسكريبت من المرحلة الأولى
-COPY --from=builder --chown=loaduser:loadgroup /app/posta /app/postb ./
-COPY --from=builder --chown=loaduser:loadgroup /app/generate-votes.sh ./
-USER loaduser
+COPY --from=builder --chown=loaduser:loadgroup /app/posta /app/postb /app/generate-votes.sh ./
+RUN chmod +x generate-votes.sh
 
-# إعطاء صلاحية التنفيذ للسكريبت
-# RUN chmod +x generate-votes.sh
-# تشغيل السكريبت عند بدء الـ Container
-CMD ["sh", "./generate-votes.sh"]
+USER loaduser
+CMD ["sh", "-c", "sleep 5 && ./generate-votes.sh"]
