@@ -39,7 +39,7 @@ spec:
               drop: ["ALL"]
           ports:
             - name: vote-port
-              containerPort: 80
+              containerPort: 8080
           env:
             - name: REDIS_HOST
               valueFrom:
