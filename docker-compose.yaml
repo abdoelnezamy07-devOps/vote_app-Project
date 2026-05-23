@@ -34,8 +34,10 @@ services:
     image: redis:alpine
     networks:
       - backend
+    volumes:
+      - ./healthchecks/redis.sh:/healthchecks/redis.sh:ro
     healthcheck:
-      test: ["CMD", "sh", "./healthchecks/redis.sh"]
+      test: ["CMD", "sh", "/healthchecks/redis.sh"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -46,8 +48,10 @@ services:
      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - backend
+    volumes:
+      - ./healthchecks/postgres.sh:/healthchecks/postgres.sh:ro
     healthcheck:
-      test: ["CMD", "sh", "./healthchecks/postgres.sh"]
+      test: ["CMD", "sh", "/healthchecks/postgres.sh"]
       interval: 5s
       timeout: 3s
       retries: 5     
