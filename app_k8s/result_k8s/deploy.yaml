@@ -1,17 +1,18 @@
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vote
+  name: result
   namespace: security 
   labels:
-    app: vote
+    app: result
     tier: frontend
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: vote
+      app: result
       tier: frontend
   strategy:
     type: RollingUpdate
@@ -21,50 +22,63 @@ spec:
   template:
     metadata:
       labels:
-        app: vote
+        app: result
         tier: frontend
     spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
-        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: vote-cont
-          image: abdelrhmanpasha/vote:latest
+        - name: result-cont
+          image: abdelrhmanpasha/result:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
           ports:
-            - name: vote-port
-              containerPort: 8080
+            - name: result-port
+              containerPort: 4000
           env:
-            - name: REDIS_HOST
+            - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  key: REDIS_HOST
+                  key: POSTGRES_HOST
                   name: app-cm
-            
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: app-cm
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: db-secrets
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD 
+                  name: db-secrets
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
               memory: "128Mi"
-              cpu: "500m"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
           
           readinessProbe:
             httpGet:
               path: / # مسار خفيف للتأكد إن الـ App قام
-              port: vote-port
+              port: result-port
             initialDelaySeconds: 10
             periodSeconds: 5
           
           livenessProbe:
             httpGet:
               path: /
-              port: vote-port
+              port: result-port
             initialDelaySeconds: 20
             periodSeconds: 10

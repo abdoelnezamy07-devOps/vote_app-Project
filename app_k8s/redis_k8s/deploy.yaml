@@ -34,10 +34,10 @@ spec:
           resources:
             requests:
               memory: "128Mi"
-              cpu: "128m"
+              cpu: "100m"
             limits:
               memory: "256Mi"
-              cpu: "256m"
+              cpu: "200m"
           livenessProbe:
             exec:
               command: ["redis-cli", "ping"]

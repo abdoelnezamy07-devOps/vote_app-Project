@@ -1,46 +1,43 @@
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: result
-  namespace: security 
+  name: worker
+  namespace: security
   labels:
-    app: result
-    tier: frontend
+    app: worker
+    tier: backend
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: result
-      tier: frontend
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+      app: worker
+      tier: backend
   template:
     metadata:
       labels:
-        app: result
-        tier: frontend
+        app: worker
+        tier: backend
     spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
+        fsGroup: 1001
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: result-cont
-          image: abdelrhmanpasha/result:latest
+        - name: worker
+          image: abdelrhmanpasha/worker:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
-          ports:
-            - name: result-port
-              containerPort: 4000
           env:
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_HOST
+                  name: app-cm
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
@@ -63,22 +60,8 @@ spec:
                   name: db-secrets
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
               memory: "128Mi"
-              cpu: "500m"
-          
-          readinessProbe:
-            httpGet:
-              path: / # مسار خفيف للتأكد إن الـ App قام
-              port: result-port
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          
-          livenessProbe:
-            httpGet:
-              path: /
-              port: result-port
-            initialDelaySeconds: 20
-            periodSeconds: 10
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"

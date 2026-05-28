@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-server-to-webhook
+  namespace: ingress-nginx # تأكد من اسم النيم سبيس بتاع الـ Ingress عندك
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: controller # بيستهدف الـ Ingress controller pod
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector: {} # بيسمح للـ API Server اللي جاي من بره الـ namespace
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 8443

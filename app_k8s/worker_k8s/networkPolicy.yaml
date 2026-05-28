@@ -8,6 +8,7 @@ spec:
   podSelector:
     matchLabels:
       app: worker
+      tier: backend
   policyTypes:
   - Egress
   egress:
