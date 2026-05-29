@@ -84,11 +84,44 @@ The application includes a seed service (`/seed-data`) that can populate the dat
   - 2000 votes for option A
   - 1000 votes for option B
 
-### How to Use Seed Data
-
-1. Include the seed service in your `docker-compose.yml`
-2. Run the seed service after all other services are healthy:
-   ```bash
-   docker compose run --rm seed
-   ```
 ####### Continue, i'm gonna write how you can use it in details with terraform as well #######
+
+After docker compose it works locally.
+
+Using terraform to create infrastructure...
+before it 
+run command ssh-keygen -t 4096 key-name
+then;
+ssh-add private key to use it without upload
+ssh -A username@public-ip of bastion host
+ssh username@pirvate-ip of master/worker nodes
+
+then install k8s to orchestrate
+in master node 
+- use calico-network with (It's default CIDR-Block) to use networPolicy
+in worker node
+- Join cluster by using sudo <"join command output from create cluster on master">
+in master
+- install Helm then;
+install/domnload ingress/ebs and prometheus
+# helm install my-ingress ingress-nginx/ingress-nginx \
+#   --namespace ingress-nginx --create-namespace \
+#   --set controller.service.type=NodePort \
+#   --set controller.service.nodePorts.http=32000 ### to be the same with target-gp
+
+# helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+#     --namespace kube-system
+
+# helm install monitoring prometheus-community/kube-prometheus-stack \
+#   --namespace monitoring --create-namespace 
+
+then;
+Run command
+- kubectl get svc -n monitoring to get the exact name of prometheus,..... to add it in Monitor-ingress  
+- kubectl apply -f filePath/ -R
+- kubectl get po -n security to ensure all pods are running
+
+- nslookup loadbalance name to get public-ip to use it in /etc/hosts file
+- Open sudo vim /etc/hosts and write LB ip with name you wanna open in browser for Ex. 34.242.25.3 app.local.vote it's the same name you write in your ingress.yaml 
+- 
+
