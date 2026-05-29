@@ -1,0 +1,18 @@
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  name: result-svc
+  namespace: security
+  labels:
+    app: result
+    tier: frontend
+spec:
+  selector:
+    app: result
+    tier: frontend
+  type: ClusterIP
+  ports:
+    - port: 8081
+      name: result-svc-port
+      targetPort: result-port
